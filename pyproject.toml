@@ -1,24 +1,30 @@
-[project]
+[tool.poetry]
 name = "pfd-rag-assistant"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Daniel",email = "danya2zxc@gmail.com"}
-]
+packages = [{ include = "app" }]
+authors = ["Daniel <danya2zxc@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
-dependencies = [
-    "fastapi (>=0.116.1,<0.117.0)",
-    "uvicorn (>=0.35.0,<0.36.0)",
-    "pydantic (>=2.11.7,<3.0.0)",
-    "pydantic-settings (>=2.10.1,<3.0.0)",
-    "pypdf2 (>=3.0.1,<4.0.0)",
-    "python-multipart (>=0.0.20,<0.0.21)",
-    "langchain (>=0.3.27,<0.4.0)",
-    "langchain-community (>=0.3.29,<0.4.0)"
-]
 
 
+
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.14"
+fastapi = ">=0.116.1,<0.117.0"
+uvicorn = ">=0.35.0,<0.36.0"
+pydantic = ">=2.11.7,<3.0.0"
+pydantic-settings = ">=2.10.1,<3.0.0"
+pypdf2 = ">=3.0.1,<4.0.0"
+python-multipart = ">=0.0.20,<0.0.21"
+langchain = ">=0.3.27,<0.4.0"
+langchain-community = ">=0.3.29,<0.4.0"
+openai = "^1.107.2"
+
+
+[tool.poetry.group.gpu.dependencies]
+sentence-transformers = "^5.1.0"
+torch = "^2.8.0"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
