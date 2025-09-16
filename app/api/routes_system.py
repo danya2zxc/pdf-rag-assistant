@@ -6,6 +6,7 @@ router = APIRouter(prefix="/system", tags=["system"])
 
 @router.post("/embed")
 async def embed_texts(texts: list[str]):
+    ''' Endpoint to test embedding functionality '''
     emb = get_embedder()
     vecs = emb.embed(texts)
     return {

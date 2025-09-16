@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from app.core.config import settings
+from .core.config import settings
 from .api.routes_upload import router as upload 
-from app.api.routes_system import router as system_router
+from .api.routes_system import router as system_router
+from .api.routes_ask import router as ask_router
 app = FastAPI(title=settings.app_name)
 
 
@@ -12,3 +13,4 @@ async def ping():
 
 app.include_router(upload)
 app.include_router(system_router)
+app.include_router(ask_router)
