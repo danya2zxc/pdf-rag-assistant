@@ -1,0 +1,38 @@
+# Simple, fixed single-stage Dockerfile for local/dev usage
+FROM python:3.12-slim
+
+# set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1 \
+    PATH="/opt/poetry/bin:$PATH"
+
+
+
+# instal system dependencies + curl for installer
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl build-essential ca-certificates git \
+ && curl -sSL https://install.python-poetry.org | python3 - \
+ && apt-get purge -y --auto-remove curl build-essential \
+ && rm -rf /var/lib/apt/lists/*
+
+
+
+# set the working dir
+WORKDIR /app
+
+# copy metadata first for better cache usage
+COPY pyproject.toml poetry.lock* /app/
+
+# install dependencies
+RUN poetry install --no-ansi --without gpu --no-root
+
+# copy the rest of the application code
+COPY . /app/
+
+EXPOSE 8000
+
+# run the application
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
