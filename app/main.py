@@ -1,8 +1,10 @@
 from fastapi import FastAPI
-from .core.config import settings
-from .api.routes_upload import router as upload 
-from .api.routes_system import router as system_router
+
 from .api.routes_ask import router as ask_router
+from .api.routes_system import router as system_router
+from .api.routes_upload import router as upload
+from .core.config import settings
+
 app = FastAPI(title=settings.app_name)
 
 

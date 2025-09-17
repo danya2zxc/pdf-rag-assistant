@@ -1,11 +1,8 @@
 from typing import List
+
 from openai import OpenAI
+
 from ..core.config import settings
-
-
-
-
-
 
 
 class RAGPipeline:
@@ -17,7 +14,7 @@ class RAGPipeline:
 
     def build_prompt(self, question: str, chunks: List[str]):
         context = "\n\n".join(chunks)
-        
+
         return f"""Answer the question using only context below.
         If the context is irrelevant or insufficient, answer "I dont know."
         Context:
@@ -28,7 +25,7 @@ class RAGPipeline:
 
     def answer(self, question: str):
         results = self.store.search(question, k=self.k)
-        if not results or results[0][1] > 1.5: 
+        if not results or results[0][1] > 1.5:
             return {"question": question, "answer": "I don't know", "sources": []}
 
         chunks = [text for text, _ in results]
@@ -42,8 +39,5 @@ class RAGPipeline:
         return {
             "question": question,
             "answer": response.choices[0].message.content,
-            "sources": [
-                {"text": text, "distance": dist}
-                for text, dist in results
-            ],
+            "sources": [{"text": text, "distance": dist} for text, dist in results],
         }

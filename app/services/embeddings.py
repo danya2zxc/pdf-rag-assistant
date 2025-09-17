@@ -1,11 +1,10 @@
-
-from typing import List
-from app.core.config import settings
-from openai import OpenAI
 from abc import ABC, abstractmethod
 from functools import lru_cache
+from typing import List
 
+from openai import OpenAI
 
+from app.core.config import settings
 
 
 class EmbeddingBase(ABC):
@@ -25,10 +24,12 @@ class EmbeddingBase(ABC):
     NotImplementedError:
         If the `embed` method is not implemented in a subclass.
     """
+
     @abstractmethod
     def embed(self, texts: List[str]) -> List[List[float]]:
         """Return embeddings for a list of texts."""
         raise NotImplementedError
+
 
 def _iter_batches(items: List[str], batch_size: int):
     """
@@ -57,25 +58,24 @@ class EmbeddingOpenAI(EmbeddingBase):
             Texts are stripped of leading/trailing whitespace and processed in batches.
             Returns a list of embedding vectors corresponding to the input texts.
     """
+
     def __init__(self, batch_size: int, model):
         self.client = OpenAI(api_key=settings.openai_api_key)
-        self.model =  model
+        self.model = model
         self.batch_size = batch_size
-    
+
     def embed(self, texts: List[str]):
-        
+
         texts = [t.strip() for t in texts]
-        
+
         vectors = []
         for batch in _iter_batches(texts, self.batch_size):
-            
-            resp = self.client.embeddings.create(
-                model=self.model,
-                input=batch
-            )
+
+            resp = self.client.embeddings.create(model=self.model, input=batch)
             vectors.extend([item.embedding for item in resp.data])
         return vectors
-    
+
+
 class EmbeddingLocal(EmbeddingBase):
     """
     EmbeddingLocal provides local embedding generation using a specified SentenceTransformer model.
@@ -96,21 +96,21 @@ class EmbeddingLocal(EmbeddingBase):
 
     def __init__(self, model_name: str, batch_size: int):
         try:
+            import torch
             from sentence_transformers import SentenceTransformer
-            import torch 
         except Exception as e:
             raise ImportError(
                 "Local embeddings require 'sentence-transformers' and 'torch' installed. "
                 "Install with Poetry group or pip before using local backend."
             ) from e
 
-        from sentence_transformers import SentenceTransformer
         import torch
+        from sentence_transformers import SentenceTransformer
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = SentenceTransformer(model_name, device=device)
         self.batch_size = batch_size
-        
+
     def embed(self, texts: List[str]):
         texts = [t.strip() for t in texts]
 
@@ -123,6 +123,7 @@ class EmbeddingLocal(EmbeddingBase):
         )
 
         return [v.tolist() if hasattr(v, "tolist") else list(v) for v in vectors]
+
 
 @lru_cache(maxsize=1)
 def get_embedder() -> EmbeddingBase:
