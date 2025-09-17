@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from openai import BaseModel
+from pydantic import BaseModel
 
 from ..services.rag_pipeline import RAGPipeline
 from ..services.vectorstore import VectorStore
