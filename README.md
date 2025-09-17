@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="assets/logo.png" alt="PDF RAG Assistant Logo" width="200"/>
+</p>
+
+
 # 📚 PDF RAG Assistant
 
 [![CI](https://github.com/danya2zxc/pfd-rag-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/danya2zxc/pfd-rag-assistant/actions/workflows/ci.yml)
@@ -21,6 +26,7 @@ This project is designed to showcase modern backend development practices, inclu
 -   **✅ Tested & Linted**: A comprehensive test suite with `pytest` and a CI pipeline that enforces code quality with `ruff`, `black`, and `isort`.
 
 ---
+
 
 ## 🛠️ Tech Stack
 
